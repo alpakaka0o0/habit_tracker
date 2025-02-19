@@ -16,22 +16,34 @@ public class HabitLog {
 
     private LocalDateTime completedDate;
 
-    // ✅ 기본 생성자 (JPA 사용 시 필수)
     public HabitLog() {}
 
-    // ✅ 모든 필드를 포함한 생성자
     public HabitLog(Habit habit, LocalDateTime completedDate) {
         this.habit = habit;
         this.completedDate = completedDate;
     }
 
-    // ✅ Getter & Setter
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public long getId() {
+        return id;
+    }
 
-    public Habit getHabit() { return habit; }
-    public void setHabit(Habit habit) { this.habit = habit; }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public LocalDateTime getCompletedDate() { return completedDate; }
-    public void setCompletedDate(LocalDateTime completedDate) { this.completedDate = completedDate; }
+    public Habit getHabit() {
+        return habit;
+    }
+
+    public void setHabit(Habit habit) {
+        this.habit = habit;
+    }
+
+    public LocalDateTime getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(LocalDateTime completedDate) {
+        this.completedDate = completedDate;
+    }
 }
