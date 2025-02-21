@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/habits")
+@CrossOrigin(origins = "http://localhost:3000")
 public class HabitController {
     private final HabitService habitService;
 
