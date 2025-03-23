@@ -33,7 +33,6 @@ public class HabitService {
     public Habit updateHabit(Long id, Habit habitDetails) {
         Habit habit = habitRepository.findById(id).orElseThrow();
         habit.setName(habitDetails.getName());
-        habit.setStartDate(habitDetails.getStartDate());
         habit.setEndDate(habitDetails.getEndDate());
         habit.setUpdatedAt(LocalDateTime.now());
         habit.setStatus(habitDetails.getStatus());

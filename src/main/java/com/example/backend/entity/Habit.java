@@ -72,9 +72,6 @@ public class Habit {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
 
     public LocalDate getEndDate() {
         return endDate;
@@ -90,5 +87,9 @@ public class Habit {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
     }
 }
