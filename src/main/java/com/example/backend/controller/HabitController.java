@@ -4,6 +4,8 @@ import com.example.backend.entity.Habit;
 import com.example.backend.service.HabitService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -18,28 +20,31 @@ public class HabitController {
     }
 
     @GetMapping
-    public List<Habit> getAllHabits() {
+    public Flux<Habit> getAllHabits() {
         return habitService.getAllHabits();
     }
 
     @GetMapping("/active")
-    public List<Habit> getActiveHabits() {
+    public Flux<Habit> getActiveHabits() {
         return habitService.getActiveHabits();
     }
 
     @PostMapping
-    public Habit createHabit(@RequestBody Habit habit) {
+    public Mono<Habit> createHabit(@RequestBody Habit habit) {
         return habitService.createHabit(habit);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Habit> updateHabit(@PathVariable Long id, @RequestBody Habit habitDetails) {
-        return ResponseEntity.ok(habitService.updateHabit(id, habitDetails));
+    public Mono<ResponseEntity<Habit>> updateHabit(@PathVariable Long id, @RequestBody Habit habitDetails) {
+        return habitService.updateHabit(id, habitDetails)
+                .map(ResponseEntity::ok)
+                .onErrorResume(e->Mono.just(ResponseEntity.notFound().build()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteHabit(@PathVariable Long id) {
-        habitService.softDeleteHabit(id);
-        return ResponseEntity.noContent().build();
+    public Mono<ResponseEntity<Void>> softDeleteHabit(@PathVariable Long id) {
+        return habitService.softDeleteHabit(id)
+                .map(deleted -> ResponseEntity.noContent().<Void>build())
+                .onErrorResume(e-> Mono.just(ResponseEntity.notFound().build()));
     }
 }

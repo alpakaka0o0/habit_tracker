@@ -18,10 +18,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'io.projectreactor:reactor-core:3.6.0'
+	implementation 'io.r2dbc:r2dbc-h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'dev.miku:r2dbc-mysql:0.8.2.RELEASE'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

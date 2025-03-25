@@ -1,33 +1,33 @@
 package com.example.backend.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "habit")
 public class Habit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+
     private String name;
 
-    @Column(nullable = false)
+    @Column("start_date")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column("end_date")
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Status status = Status.ACTIVE;
+    private String status = Status.ACTIVE.name();
 
-    @Column(updatable = false)
+    @Column("created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column("updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();;
+
+    @Column("deleted_at")
     private LocalDateTime deletedAt;
 
     public void setUpdatedAt(LocalDateTime now) {
@@ -42,14 +42,19 @@ public class Habit {
         ACTIVE, PAUSED, DELETED
     }
 
-    public Habit() {}
+    public Habit() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.status = Status.ACTIVE.name();
+    }
 
     public Habit(String name, LocalDate startDate, LocalDate endDate, Status status) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.status = status;
+        this.status = status.name();
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -82,11 +87,11 @@ public class Habit {
     }
 
     public Status getStatus() {
-        return status;
+        return Status.valueOf(this.status);
     }
 
     public void setStatus(Status status) {
-        this.status = status;
+        this.status = status.name();
     }
 
     public LocalDateTime getDeletedAt() {

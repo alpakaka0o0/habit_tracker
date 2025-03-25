@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.entity.HabitLog;
 import com.example.backend.repository.HabitLogRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,19 +17,19 @@ public class HabitLogService {
         this.habitLogRepository = habitLogRepository;
     }
 
-    public List<HabitLog> getAllHabitLogs() {
+    public Flux<HabitLog> getAllHabitLogs() {
         return habitLogRepository.findAll();
     }
 
-    public Optional<HabitLog> getHabitLogById(Long id) {
+    public Mono<HabitLog> getHabitLogById(Long id) {
         return getHabitLogById(id);
     }
 
-    public HabitLog saveHabitLog(HabitLog habitLog) {
+    public Mono<HabitLog> saveHabitLog(HabitLog habitLog) {
         return habitLogRepository.save(habitLog);
     }
 
-    public void deleteHabitLog(Long id) {
-        habitLogRepository.deleteById(id);
+    public Mono<Void> deleteHabitLog(Long id) {
+        return habitLogRepository.deleteById(id);
     }
 }

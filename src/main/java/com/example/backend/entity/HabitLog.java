@@ -1,46 +1,48 @@
 package com.example.backend.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "habit_log")
+@Table("habit_log")
 public class HabitLog {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
+    @Column("habit_id")
+    private Long habitId;
 
+    @Column("completed_date")
     private LocalDateTime completedDate;
 
     public HabitLog() {}
 
-    public HabitLog(Habit habit, LocalDateTime completedDate) {
-        this.habit = habit;
+    public HabitLog(Long habitId, LocalDateTime completedDate) {
+        this.habitId = habitId;
         this.completedDate = completedDate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Habit getHabit() {
-        return habit;
-    }
-
-    public void setHabit(Habit habit) {
-        this.habit = habit;
+    public Long getHabitId() {
+        return habitId;
     }
 
     public LocalDateTime getCompletedDate() {
         return completedDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setHabitId(Long habitId) {
+        this.habitId = habitId;
     }
 
     public void setCompletedDate(LocalDateTime completedDate) {

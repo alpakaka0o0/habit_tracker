@@ -1,10 +1,9 @@
 package com.example.backend.repository;
 
-import com.example.backend.entity.HabitLog;
+import com.example.backend.entity.Device;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HabitLogRepository extends ReactiveCrudRepository<HabitLog, Long> {
-
+public interface DeviceRepository extends ReactiveCrudRepository<Device, String> {
 }
