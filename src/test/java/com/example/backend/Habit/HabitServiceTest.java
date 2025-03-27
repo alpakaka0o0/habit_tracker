@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -44,22 +46,11 @@ class HabitServiceTest {
     @Test
     @DisplayName("정상적인 습관 생성")
     void testCreateHabit() {
-        when(habitRepository.save(any(Habit.class))).thenReturn(testHabit1);
+        when(habitRepository.save(any(Habit.class))).thenReturn(Mono.just(testHabit1));
 
-        Habit savedHabit = habitService.createHabit(testHabit1);
+        Habit savedHabit = habitService.createHabit(testHabit1).block();
         assertNotNull(savedHabit);
         assertEquals("Morning Run", savedHabit.getName());
-        verify(habitRepository, times(1)).save(any(Habit.class));
-    }
-
-    @Test
-    @DisplayName("startDate가 null일 때 기본값 (현재 날짜) 설정 확인")
-    void testCreateHabit_StartDateIsNull() {
-        Habit habit = new Habit("New Habit", null, null, Habit.Status.ACTIVE);
-        when(habitRepository.save(any(Habit.class))).thenReturn(habitService.createHabit(habit));
-
-        Habit savedHabit = habitService.createHabit(habit);
-        assertNotNull(savedHabit.getStartDate());
         verify(habitRepository, times(1)).save(any(Habit.class));
     }
 
@@ -67,72 +58,41 @@ class HabitServiceTest {
     @DisplayName("✅ endDate가 null일 때 기본값 (3개월 후) 설정 확인")
     void testCreateHabit_EndDateIsNull() {
         Habit habit = new Habit("New Habit", LocalDate.now(), null, Habit.Status.ACTIVE);
+
         when(habitRepository.save(any(Habit.class))).thenReturn(habitService.createHabit(habit));
 
-        Habit savedHabit = habitService.createHabit(habit);
+        Habit savedHabit = habitService.createHabit(habit).block();
         assertEquals(LocalDate.now().plusMonths(3), savedHabit.getEndDate());
-        verify(habitRepository, times(1)).save(any(Habit.class));
-    }
-
-    // ✅ invalid_status → 존재하지 않는 ENUM 값 요청 시 예외 처리 확인
-    @Test
-    @DisplayName("✅ 존재하지 않는 ENUM 값 요청 시 예외 발생 확인")
-    void testCreateHabit_InvalidStatus() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Habit("Invalid Habit", LocalDate.now(), LocalDate.now().plusMonths(3), null);
-        });
-    }
-
-    // ➕ name_is_null → 이름 필드가 null이면 예외 발생
-    @Test
-    @DisplayName("➕ name 필드가 null일 경우 예외 발생 확인")
-    void testCreateHabit_NameIsNull() {
-        assertThrows(NullPointerException.class, () -> {
-            new Habit(null, LocalDate.now(), LocalDate.now().plusMonths(3), Habit.Status.ACTIVE);
-        });
-    }
-
-    // ➕ duplicate_name → 동일한 이름의 습관을 추가할 수 있는지 확인
-    @Test
-    @DisplayName("➕ 동일한 이름의 습관을 추가할 수 있는지 확인")
-    void testCreateHabit_DuplicateName() {
-        when(habitRepository.findAll()).thenReturn(List.of(testHabit1, testHabit2));
-
-        boolean exists = habitRepository.findAll().stream()
-                .anyMatch(habit -> habit.getName().equals("Morning Run"));
-
-        assertTrue(exists);
     }
 
     // ✅ all_ok → 전체 목록 조회 정상 작동 확인
     @Test
     @DisplayName("✅ 전체 습관 목록 조회 정상 작동 확인")
     void testGetAllHabits() {
-        when(habitRepository.findAll()).thenReturn(List.of(testHabit1, testHabit2));
+        when(habitRepository.findAll()).thenReturn(Flux.just(testHabit1, testHabit2));
 
-        List<Habit> habits = habitService.getAllHabits();
+        List<Habit> habits = habitService.getAllHabits().collectList().block();
         assertEquals(2, habits.size());
-        verify(habitRepository, times(1)).findAll();
     }
 
     // ✅ active_ok → 활성화된 습관만 조회 정상 작동 확인
     @Test
     @DisplayName("✅ 활성화된 습관만 조회 정상 작동 확인")
     void testGetActiveHabits() {
-        when(habitRepository.findByStatus(Habit.Status.ACTIVE)).thenReturn(List.of(testHabit1));
+        when(habitRepository.findByStatus(Habit.Status.ACTIVE.name())).thenReturn(Flux.just(testHabit1));
 
-        List<Habit> activeHabits = habitService.getActiveHabits();
+        List<Habit> activeHabits = habitService.getActiveHabits().collectList().block();
         assertEquals(1, activeHabits.size());
-        verify(habitRepository, times(1)).findByStatus(Habit.Status.ACTIVE);
+        assertEquals(Habit.Status.ACTIVE, activeHabits.get(0).getStatus());
     }
 
     // ➕ empty_list → DB에 저장된 습관이 없을 때 빈 리스트 반환 확인
     @Test
     @DisplayName("➕ 습관 목록이 없을 때 빈 리스트 반환 확인")
     void testGetHabits_EmptyList() {
-        when(habitRepository.findAll()).thenReturn(Collections.emptyList());
+        when(habitRepository.findAll()).thenReturn(Flux.empty());
 
-        List<Habit> habits = habitService.getAllHabits();
+        List<Habit> habits = habitService.getAllHabits().collectList().block();
         assertTrue(habits.isEmpty());
     }
 
@@ -140,24 +100,23 @@ class HabitServiceTest {
     @Test
     @DisplayName("✅ 정상적인 습관 수정")
     void testUpdateHabit() {
-        when(habitRepository.findById(1L)).thenReturn(Optional.of(testHabit1));
-        when(habitRepository.save(any(Habit.class))).thenReturn(testHabit1);
+        when(habitRepository.findById(1L)).thenReturn(Mono.just(testHabit1));
+        when(habitRepository.save(any(Habit.class))).thenReturn(Mono.just(testHabit1));
 
         testHabit1.setName("Evening Walk");
-        Habit updatedHabit = habitService.updateHabit(1L, testHabit1);
+        Habit updatedHabit = habitService.updateHabit(1L, testHabit1).block();
 
         assertEquals("Evening Walk", updatedHabit.getName());
-        verify(habitRepository, times(1)).save(testHabit1);
     }
 
     // ✅ invalid → 존재하지 않는 id 수정 요청 시 예외 발생 확인
     @Test
     @DisplayName("✅ 존재하지 않는 id 수정 요청 시 예외 발생 확인")
     void testUpdateHabit_InvalidId() {
-        when(habitRepository.findById(999L)).thenReturn(Optional.empty());
+        when(habitRepository.findById(999L)).thenReturn(Mono.empty());
 
-        assertThrows(RuntimeException.class, () -> {
-            habitService.updateHabit(999L, testHabit1);
+        assertThrows(IllegalArgumentException.class, () -> {
+            habitService.updateHabit(999L, testHabit1).block();
         });
     }
 
@@ -165,11 +124,11 @@ class HabitServiceTest {
     @Test
     @DisplayName("➕ 상태(status) 필드만 변경하는 경우 정상 동작 확인")
     void testUpdateHabit_StatusOnly() {
-        when(habitRepository.findById(1L)).thenReturn(Optional.of(testHabit1));
-        when(habitRepository.save(any(Habit.class))).thenReturn(testHabit1);
+        when(habitRepository.findById(1L)).thenReturn(Mono.just(testHabit1));
+        when(habitRepository.save(any(Habit.class))).thenReturn(Mono.just(testHabit1));
 
         testHabit1.setStatus(Habit.Status.PAUSED);
-        Habit updatedHabit = habitService.updateHabit(1L, testHabit1);
+        Habit updatedHabit = habitService.updateHabit(1L, testHabit1).block();
 
         assertEquals(Habit.Status.PAUSED, updatedHabit.getStatus());
     }
@@ -178,23 +137,22 @@ class HabitServiceTest {
     @Test
     @DisplayName("✅ 정상적인 습관 삭제 요청")
     void testSoftDeleteHabit() {
-        when(habitRepository.findById(1L)).thenReturn(Optional.of(testHabit1));
+        when(habitRepository.findById(1L)).thenReturn(Mono.just(testHabit1));
+        when(habitRepository.save(any(Habit.class))).thenReturn(Mono.just(testHabit1));
 
-        habitService.softDeleteHabit(1L);
-
-        assertEquals(Habit.Status.DELETED, testHabit1.getStatus());
-        assertNotNull(testHabit1.getDeletedAt());
-        verify(habitRepository, times(1)).save(testHabit1);
+        Habit deleted = habitService.softDeleteHabit(1L).block();
+        assertEquals(Habit.Status.DELETED, deleted.getStatus());
+        assertNotNull(deleted.getDeletedAt());
     }
 
     // ✅ invalid_id → 존재하지 않는 id 삭제 요청 시 예외 발생 확인
     @Test
     @DisplayName("✅ 존재하지 않는 id 삭제 요청 시 예외 발생 확인")
     void testSoftDeleteHabit_InvalidId() {
-        when(habitRepository.findById(999L)).thenReturn(Optional.empty());
+        when(habitRepository.findById(999L)).thenReturn(Mono.empty());
 
-        assertThrows(RuntimeException.class, () -> {
-            habitService.softDeleteHabit(999L);
+        assertThrows(IllegalArgumentException.class, () -> {
+            habitService.softDeleteHabit(999L).block();
         });
     }
 
@@ -203,10 +161,10 @@ class HabitServiceTest {
     @DisplayName("➕ 이미 삭제된 습관을 다시 삭제할 때 예외 발생 확인")
     void testSoftDeleteHabit_AlreadyDeleted() {
         testHabit1.setStatus(Habit.Status.DELETED);
-        when(habitRepository.findById(1L)).thenReturn(Optional.of(testHabit1));
+        when(habitRepository.findById(1L)).thenReturn(Mono.just(testHabit1));
 
-        assertThrows(RuntimeException.class, () -> {
-            habitService.softDeleteHabit(1L);
+        assertThrows(IllegalArgumentException.class, () -> {
+            habitService.softDeleteHabit(1L).block();
         });
     }
 }

@@ -22,7 +22,7 @@ public class HabitLogService {
     }
 
     public Mono<HabitLog> getHabitLogById(Long id) {
-        return getHabitLogById(id);
+        return habitLogRepository.findById(id);
     }
 
     public Mono<HabitLog> saveHabitLog(HabitLog habitLog) {

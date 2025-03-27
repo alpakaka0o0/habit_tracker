@@ -48,6 +48,9 @@ public class HabitService {
         return habitRepository.findById(id)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Habit not found")))
                 .flatMap(habit -> {
+                    if (Habit.Status.DELETED.equals(habit.getStatus())) {
+                        return Mono.error(new IllegalArgumentException("Already deleted"));
+                    }
                     habit.setDeletedAt(LocalDateTime.now());
                     habit.setStatus(Habit.Status.DELETED);
                     return habitRepository.save(habit);
