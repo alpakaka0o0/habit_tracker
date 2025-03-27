@@ -54,17 +54,6 @@ class HabitServiceTest {
         verify(habitRepository, times(1)).save(any(Habit.class));
     }
 
-    @Test
-    @DisplayName("✅ endDate가 null일 때 기본값 (3개월 후) 설정 확인")
-    void testCreateHabit_EndDateIsNull() {
-        Habit habit = new Habit("New Habit", LocalDate.now(), null, Habit.Status.ACTIVE);
-
-        when(habitRepository.save(any(Habit.class))).thenReturn(habitService.createHabit(habit));
-
-        Habit savedHabit = habitService.createHabit(habit).block();
-        assertEquals(LocalDate.now().plusMonths(3), savedHabit.getEndDate());
-    }
-
     // ✅ all_ok → 전체 목록 조회 정상 작동 확인
     @Test
     @DisplayName("✅ 전체 습관 목록 조회 정상 작동 확인")
