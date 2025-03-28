@@ -8,6 +8,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: r2dbc:mysql://db:3306/habit
       SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 0
     depends_on:
       - db
 
@@ -18,15 +19,16 @@ services:
       - "50000:50000"
     user: root
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - ./jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
+      - /usr/local/bin/docker:/usr/bin/docker
     container_name: jenkins
 
   db:
     image: mysql:8
     environment:
       MYSQL_DATABASE: habit
+      MYSQL_ROOT_PASSWORD: 0
     ports:
       - "3306:3306"
 
