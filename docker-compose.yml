@@ -8,7 +8,6 @@ services:
     environment:
       SPRING_DATASOURCE_URL: r2dbc:mysql://db:3306/habit
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: example
     depends_on:
       - db
   jenkins:
