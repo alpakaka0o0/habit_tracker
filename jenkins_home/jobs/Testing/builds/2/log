@@ -1,0 +1,36 @@
+Started by GitHub push by alpakaka0o0
+Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/Testing
+The recommended git tool is: NONE
+using credential admin
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Testing/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/alpakaka0o0/habit_tracker # timeout=10
+Fetching upstream changes from https://github.com/alpakaka0o0/habit_tracker
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --force --progress -- https://github.com/alpakaka0o0/habit_tracker +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 7f6b2ff47ee628a12995be57b58f98159f33e6c1 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 7f6b2ff47ee628a12995be57b58f98159f33e6c1 # timeout=10
+Commit message: "Test : docker 와 jenkins 연결"
+ > git rev-list --no-walk 39d9210c23002d0936afc0402a69428cf27462af # timeout=10
+[Testing] $ /bin/bash /tmp/jenkins11786359977982063714.sh
+1. 의존성 설치 및 테스트 실행
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileTestJava UP-TO-DATE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test UP-TO-DATE
+
+BUILD SUCCESSFUL in 3s
+4 actionable tasks: 4 up-to-date
+테스트 통과! Docker Compose 빌드 및 실행
+/tmp/jenkins11786359977982063714.sh: line 13: docker-compose: command not found
+Build step 'Execute shell' marked build as failure
+Finished: FAILURE

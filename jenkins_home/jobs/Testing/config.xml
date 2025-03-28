@@ -45,7 +45,7 @@ fi
 
 echo &quot;테스트 통과! Docker Compose 빌드 및 실행&quot;
 
-docker-compose up --build</command>
+docker compose up --build</command>
       <configuredLocalRules/>
     </hudson.tasks.Shell>
   </builders>

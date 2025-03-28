@@ -17,5 +17,5 @@ COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-# JAR 실행 #
+# JAR 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]
