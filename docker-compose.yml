@@ -12,18 +12,6 @@ services:
     depends_on:
       - db
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    ports:
-      - "9090:8080"
-      - "50000:50000"
-    user: root
-    volumes:
-      - ./jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker:/usr/bin/docker
-    container_name: jenkins
-
   db:
     image: mysql:8
     environment:
