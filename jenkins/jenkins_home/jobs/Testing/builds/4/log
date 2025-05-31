@@ -1,0 +1,49 @@
+Started by user [8mha:////4HdniQSVO7GeWY65iq4+mBgJMT9QRU4+VFQLeKU9xPS/AAAAlx+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzWEgZu/dLi1CL9xJTczDwAj6GcLcAAAAA=[0madmin
+Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/Testing
+The recommended git tool is: NONE
+using credential admin
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Testing/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/alpakaka0o0/habit_tracker # timeout=10
+Fetching upstream changes from https://github.com/alpakaka0o0/habit_tracker
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --force --progress -- https://github.com/alpakaka0o0/habit_tracker +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 89f6ada5dbdaddcf3b8276b9438b1ad944e4cd98 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 89f6ada5dbdaddcf3b8276b9438b1ad944e4cd98 # timeout=10
+Commit message: "Test : docker 와 jenkins 연결"
+ > git rev-list --no-walk 89f6ada5dbdaddcf3b8276b9438b1ad944e4cd98 # timeout=10
+[Testing] $ /bin/bash /tmp/jenkins9009980189445417841.sh
+1. 의존성 설치 및 테스트 실행
+Downloading https://services.gradle.org/distributions/gradle-8.12.1-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+
+Welcome to Gradle 8.12.1!
+
+Here are the highlights of this release:
+ - Enhanced error and warning reporting with the Problems API
+ - File-system watching support on Alpine Linux
+ - Build and test Swift 6 libraries and apps
+
+For more details see https://docs.gradle.org/8.12.1/release-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileTestJava UP-TO-DATE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test UP-TO-DATE
+
+BUILD SUCCESSFUL in 28s
+4 actionable tasks: 4 up-to-date
+테스트 통과! Docker Compose 빌드 및 실행
+time="2025-05-28T07:46:23Z" level=warning msg="/var/jenkins_home/workspace/Testing/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'jenkins/jenkins:lts': Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+Build step 'Execute shell' marked build as failure
+Finished: FAILURE
