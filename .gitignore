@@ -39,3 +39,4 @@ out/
 src/main/resources/application.properties
 src/main/resources/schema.sql
 jenkins/jenkins_home/*
+jenkikins/jenkins_home/
